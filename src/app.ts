@@ -3,14 +3,17 @@ import http from "http";
 import logger from "morgan";
 import cors from "cors";
 
+import { config } from "config";
+
 import apiRouter from "./routes/api";
 import usersRouter from "./routes/users";
+
 
 var app = express();
 const server = http.createServer(app);
 
 const corsConfig = {
-  origin: ["http://localhost:3000", "https://cautious-space-eureka-rwjpxj9v6653p65g-3000.app.github.dev"],
+  origin: config().trustedOrigins,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
 };
 
@@ -31,7 +34,6 @@ app.use((req, res) => {
   res.status(404).send('Not Found');
 });
 
-const PORT = process.env.PORT || 8080;
-server.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+server.listen(config().port, () => {
+  console.log(`Server listening on port ${config().port}`);
 });

@@ -1,6 +1,8 @@
 import { verify } from "jsonwebtoken";
 import type { NextFunction, Response, Request } from "express"
 
+import { config } from "config";
+
 const bearerAuth = async (req: Request, res: Response, next: NextFunction) => {
     const auth = req.get("Authorization") as string;
 
@@ -13,7 +15,7 @@ const bearerAuth = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const payload = verify(
             token,
-            process.env.JWT_SECRET as string
+            config().userSecret
         );
         if (!payload || typeof payload === "string" || !payload.id) throw new Error();
 

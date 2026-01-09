@@ -1,7 +1,7 @@
 # leaderboard api
 
 > [!NOTE]
-> This api uses bearer auth so be sure to send the jwt in the authorization headers when needed: `Bearer <token>`. Routes which require auth are labled `auth` :)
+> This api uses bearer auth so be sure to send the jwt in the authorization headers when needed as follows: `Bearer <token>`. Routes which require auth are labled `auth` :)
 
 ### setup (dev):
 
@@ -19,6 +19,12 @@
         password: <string>
     }
     ```
+    ```js
+    RES body
+    {
+        token: <string>
+    }
+    ```
 - `POST` `/users/login`: logs user in (expects same fields as signup)
 - `auth` `GET` `/api/scores?amount=<n>`: gets n amount of scores for user in descending order, default is 10
 - `auth` `POST` `/api/scores`: pushes a new score to the db
@@ -29,4 +35,27 @@
         score: <number>
     }
     ```
+    ```js
+    RES body
+    {
+        scores: [
+            {
+                id: <number>
+                user_id: <number>
+                score: <number>
+            }
+        ]
+    }
+    ```
 - `GET` `/api/top-scores?amount=<n>`: gets n amount of the top scores for all users, default is 10
+    ```js
+    RES body
+    {
+        scores: [
+            {
+                username: <string>
+                score: <number>
+            }
+        ]
+    }
+    ```

@@ -15,10 +15,11 @@ export const getScores = (req: Request, res: Response) => {
             return res.status(400).json({ error: "User does not exist" });
         }
 
-        const stmt = db.prepare(`SELECT username, score FROM scores WHERE user_id = ? ORDER BY score DESC LIMIT ${amount}`);
-        const scores = stmt.all(user.id) as Score[];
+        const stmt = db.prepare("SELECT * FROM scores WHERE user_id = ? ORDER BY score DESC LIMIT ?");
+        const scores = stmt.all(user.id, amount) as Score[];
         res.json({ scores });
     } catch (err) {
+        console.log(err);
         res.status(500).json({ error: "Internal server error" });
     }
 }
@@ -27,10 +28,11 @@ export const getTopScores = (req: Request, res: Response) => {
     const amount = parseInt(req.query.amount as string) || 10;
 
     try {
-        const stmt = db.prepare(`SELECT username, score FROM scores ORDER BY score DESC LIMIT ${amount}`);
-        const scores = stmt.all() as Score[];
+        const stmt = db.prepare("SELECT users.username, scores.score FROM scores JOIN users ON scores.user_id = users.id ORDER BY scores.score DESC LIMIT ?");
+        const scores = stmt.all(amount) as Score[];
         res.json({ scores });
     } catch (err) {
+        console.log(err);
         res.status(500).json({ error: "Internal server error" });
     }
 }
@@ -50,6 +52,7 @@ export const submitScore = (req: Request, res: Response) => {
 
         res.status(201).json({ message: "Score submitted" });
     } catch (err) {
+        console.log(err);
         res.status(500).json({ error: "Internal server error" });
     }
 }

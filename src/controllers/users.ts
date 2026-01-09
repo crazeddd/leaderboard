@@ -5,22 +5,33 @@ import { Request, Response } from "express";
 import { User } from "../db";
 import db from "../db";
 
+import { config } from "config";
+
 export const signup = (req: Request, res: Response) => {
     const { username, password } = req.body;
+
+    if (!username || !password) return res.status(400).json({ error: "Username and password are required" });
 
     try {
         const hashed = bcrypt.hashSync(password, 12);
         const stmt = db.prepare("INSERT INTO users (username, password) VALUES (?, ?)");
-        stmt.run(username, hashed);
+        const result = stmt.run(username, hashed);
 
-        res.status(201).json({ message: "User created" });
+        const token = jwt.sign({ id: result.lastInsertRowid, username }, config().userSecret, { expiresIn: "30d" });
+
+        res.status(201).json({ message: "User created", token });
+
     } catch (err) {
+        console.error(err);
         res.status(400).json({ error: "Username already exists" });
     }
 }
 
 export const login = (req: Request, res: Response) => {
     const { username, password } = req.body;
+
+    if (!username || !password) return res.status(400).json({ error: "Username and password are required" });
+
     try {
         const stmt = db.prepare("SELECT * FROM users WHERE username = ?");
         const user = stmt.get(username) as User;
@@ -29,10 +40,11 @@ export const login = (req: Request, res: Response) => {
             return res.status(401).json({ error: "Invalid credentials" });
         }
 
-        const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET!, { expiresIn: "30d" });
+        const token = jwt.sign({ id: user.id, username: user.username }, config().userSecret, { expiresIn: "30d" });
 
         res.json({ token });
     } catch (err) {
+        console.error(err);
         res.status(500).json({ error: "Internal server error" });
     }
 }
