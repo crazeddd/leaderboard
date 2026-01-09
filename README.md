@@ -9,9 +9,7 @@ A simple api for storing and updating user scores. Uses express, jwt and sqlite.
 ### setup (dev):
 
 - clone repo, install deps (`npm i`), make sure you're using the latest version of Node
-- create an .env file
-- all fields for the env file are as follows: `JWT_USER_SECRET`,`JWT_ADMIN_SECRET`,`TRUSTED_ORIGINS`, `PORT`
-- port is optional and trusted origins is a comma denoted list fyi
+- create an .env file (or rename the existing example) and edit the fields to your liking
 - once you have the vars set, run the app using `npm run dev`
 
 ### routes:
