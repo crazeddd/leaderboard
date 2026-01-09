@@ -25,17 +25,9 @@
         token: <string>
     }
     ```
-- `POST` `/users/login`: logs user in (expects same fields as signup)
-- `auth` `GET` `/api/scores?amount=<n>`: gets n amount of scores for user in descending order, default is 10
-- `auth` `POST` `/api/scores`: pushes a new score to the db
-
-    ```js
-    POST body
-    {
-        score: <number>
-    }
-    ```
-    ```js
+- `POST` `/users/login`: logs user in (same post and res fields as signup)
+- `auth | GET` `/api/scores?amount=<n>`: gets n amount of scores for user in descending order, default is 10
+  ```js
     RES body
     {
         scores: [
@@ -45,6 +37,14 @@
                 score: <number>
             }
         ]
+    }
+    ```
+- `auth | POST` `/api/scores`: pushes a new score to the db
+
+    ```js
+    POST body
+    {
+        score: <number>
     }
     ```
 - `GET` `/api/top-scores?amount=<n>`: gets n amount of the top scores for all users, default is 10
