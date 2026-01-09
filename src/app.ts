@@ -6,8 +6,6 @@ import cors from "cors";
 import apiRouter from "./routes/api";
 import usersRouter from "./routes/users";
 
-import { bearerAuth } from "../auth";
-
 var app = express();
 const server = http.createServer(app);
 
@@ -23,7 +21,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/users", usersRouter);
-app.use("/api", bearerAuth, apiRouter);
+app.use("/api", apiRouter);
 
 app.get("/", (req, res) => {
   res.send("pong");
