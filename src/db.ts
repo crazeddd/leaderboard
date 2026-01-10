@@ -12,7 +12,6 @@ export interface User {
 }
 
 export interface Score {
-  id: number;
   user_id: number;
   score: number;
 }
@@ -22,8 +21,8 @@ db.exec(`CREATE TABLE IF NOT EXISTS users (
         username TEXT UNIQUE NOT NULL,
         password TEXT NOT NULL
     )`);
+
 db.exec(`CREATE TABLE IF NOT EXISTS scores (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         score INTEGER NOT NULL,
         FOREIGN KEY(user_id) REFERENCES users(id)
