@@ -7,6 +7,9 @@ export const getScores = (req: Request, res: Response) => {
     const { userId } = req.body;
 
     const amount = parseInt(req.query.amount as string) || 10;
+    const track = req.query.track as string | undefined;
+
+    if (!track) return res.status(400).json({ error: "Track is required" });
 
     if (amount < 1 || amount > 100) {
         return res.status(400).json({ error: "Amount must be between 1 and 100" });
@@ -20,8 +23,8 @@ export const getScores = (req: Request, res: Response) => {
             return res.status(400).json({ error: "User does not exist" });
         }
 
-        const stmt = db.prepare("SELECT score FROM scores WHERE user_id = ? ORDER BY score DESC LIMIT ?");
-        const scores = stmt.all(user.id, amount) as Score[];
+        const stmt = db.prepare("SELECT score, track FROM scores WHERE user_id = ? AND track = ? ORDER BY score DESC LIMIT ?");
+        const scores = stmt.all(user.id, track, amount) as Score[];
 
         res.json(scores);
     } catch (err) {
@@ -32,6 +35,9 @@ export const getScores = (req: Request, res: Response) => {
 
 export const getTopScores = (req: Request, res: Response) => {
     const amount = parseInt(req.query.amount as string) || 10;
+    const track = req.query.track as string | undefined;
+
+    if (!track) return res.status(400).json({ error: "Track is required" });
 
     if (amount < 1 || amount > 100) {
         return res.status(400).json({ error: "Amount must be between 1 and 100" });
@@ -39,7 +45,7 @@ export const getTopScores = (req: Request, res: Response) => {
 
     try {
         const stmt = db.prepare(`
-            SELECT u.username, s.user_id, s.score
+            SELECT u.username, s.user_id, s.score, s.track
             FROM (
                 SELECT
                     *,
@@ -53,7 +59,7 @@ export const getTopScores = (req: Request, res: Response) => {
             ORDER BY s.score DESC
             LIMIT ?;
             `);
-        const scores = stmt.all(amount) as Score[];
+        const scores = stmt.all(amount) as (Score & { username: string })[];
 
         res.json(scores);
     } catch (err) {
@@ -63,7 +69,7 @@ export const getTopScores = (req: Request, res: Response) => {
 }
 
 export const submitScore = (req: Request, res: Response) => {
-    const { userId, score } = req.body;
+    const { userId, score, track } = req.body;
 
     try {
         const userStmt = db.prepare("SELECT * FROM users WHERE id = ?");
@@ -72,8 +78,8 @@ export const submitScore = (req: Request, res: Response) => {
             return res.status(400).json({ error: "User does not exist" });
         }
 
-        const scoreStmt = db.prepare("INSERT INTO scores (user_id, score) VALUES (?, ?)");
-        scoreStmt.run(user.id, score);
+        const scoreStmt = db.prepare("INSERT INTO scores (user_id, score, track) VALUES (?, ?, ?)");
+        scoreStmt.run(user.id, score, track);
 
         res.status(201).json({ message: "Score submitted" });
     } catch (err) {

@@ -13,6 +13,7 @@ export interface User {
 
 export interface Score {
   user_id: number;
+  track: number;
   score: number;
 }
 
@@ -24,6 +25,7 @@ db.exec(`CREATE TABLE IF NOT EXISTS users (
 
 db.exec(`CREATE TABLE IF NOT EXISTS scores (
         user_id INTEGER NOT NULL,
+        track INTEGER NOT NULL,
         score INTEGER NOT NULL,
         FOREIGN KEY(user_id) REFERENCES users(id)
     )`);
