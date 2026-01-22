@@ -29,7 +29,7 @@ A simple api for storing and updating user scores. Uses express, jwt and sqlite.
     }
     ```
 - `POST` `/users/login`: logs user in (same post and res fields as signup)
-- `auth | GET` `/api/scores?amount=<n>`: gets n amount of scores for user in descending order, default is 10
+- `auth | GET` `/api/scores?amount=<n>&track=<n>`: gets n amount of scores for user in descending order, default is 10
   ```js
     RES body
     {
@@ -51,7 +51,7 @@ A simple api for storing and updating user scores. Uses express, jwt and sqlite.
         track: <number>
     }
     ```
-- `GET` `/api/top-scores?amount=<n>`: gets n amount of the top scores for all users, default is 10
+- `GET` `/api/top-scores?amount=<n>&track=<n>`: gets n amount of the top scores for all users, default is 10
     ```js
     RES body
     {
