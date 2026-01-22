@@ -35,8 +35,8 @@ A simple api for storing and updating user scores. Uses express, jwt and sqlite.
     {
         scores: [
             {
-                id: <number>
-                user_id: <number>
+                id: <number>,
+                user_id: <number>,
                 score: <number>
             }
         ]
@@ -47,7 +47,8 @@ A simple api for storing and updating user scores. Uses express, jwt and sqlite.
     ```js
     POST body
     {
-        score: <number>
+        score: <number>,
+        track: <number>
     }
     ```
 - `GET` `/api/top-scores?amount=<n>`: gets n amount of the top scores for all users, default is 10
@@ -56,8 +57,9 @@ A simple api for storing and updating user scores. Uses express, jwt and sqlite.
     {
         scores: [
             {
-                username: <string>
-                score: <number>
+                username: <string>,
+                score: <number>,
+                track: <number>
             }
         ]
     }
